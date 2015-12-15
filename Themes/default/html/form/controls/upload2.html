@@ -1,0 +1,127 @@
+<div id="file-[ID]" class="file-upload">
+    <div class="file-controls">
+        <input type="file" id="[ID]">
+        <input [ATTRIBUTES]/>
+        <a class="upload-button btn btn-link pull-left" style="display: none"
+           href="javascript:$('#[ID]').uploadify('upload','*')">Загрузить</a>
+        <div class="clearfix"></div>
+    </div>
+    <div id="upload-queue-[ID]">
+        <!-- BEGIN file -->
+        <div id="file-queue-[ID]" class="uploadify-queue-item">
+            <div class="cancel">
+                <a href="javascript:void(0);" data-file="[NAME]:[SIZE]:[TYPE]">X</a>
+            </div>
+            <span class="fileName">[NAME] ([SIZE_FORMAT])</span>
+            <div class="uploadify-progress">
+                <div class="uploadify-progress-bar" style="width: 100%;"></div>
+            </div>
+        </div>
+        <!-- END file -->
+    </div>
+
+    <link href="[THEME_SRC]/css/uploadify.css" rel="stylesheet"/>
+    <script src="[THEME_SRC]/js/jquery.uploadify.min.js"></script>
+    <script>
+        $(function () {
+            'use strict';
+
+            $('#upload-queue-[ID] .cancel > a').click(function(){
+                var file_string = $(this).attr('data-file');
+                $(this).parent().parent().fadeOut('fast', function(){
+                    var files_raw   = $('#control-[ID]').val();
+                    var files       = files_raw ? files_raw.split('|') : [];
+                    for (var i = files.length - 1; i >= 0; i--) {
+                        if (files[i].indexOf(file_string) == 0) {
+                            files.splice(i, 1);
+                            break;
+                        }
+                    }
+                    $('#control-[ID]').val(files.join('|'));
+                    $(this).remove()
+                })
+            });
+
+            var resource  = '[RESOURCE]';
+            var pathname = window.location.pathname;
+            var search   = window.location.search ? '&' + window.location.search.substr(1) : '';
+            var url      = pathname + '?data_handler=upload&resource=' + resource + search;
+            $("#[ID]").uploadify({
+                'buttonText' : 'Выберите файлы...',
+                'buttonClass' : 'btn btn-default',
+                'queueID' : 'upload-queue-[ID]',
+                'height' : '34',
+                'width' : '157',
+                'swf' : '[THEME_SRC]/swf/uploadify.swf',
+                // 'queueSizeLimit' : 1,
+                // 'fileSizeLimit' : '50KB',
+                'uploader' : url,
+                'auto' : false,
+                'removeCompleted' : false,
+                'onSelect' : function(file) {
+                    $('#file-[ID] .upload-button').show();
+                },
+                'onUploadSuccess' : function(file, data) {
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {
+                        alert(data);
+                        return false;
+                    }
+
+                    if (data.status == 'success') {
+                        var files_raw = $('#control-[ID]').val();
+                        var files = files_raw ? files_raw.split('|') : [];
+
+                        files.push(file.name + ':' + file.size + ':' + file.type + ':' + data.tmp_name);
+                        $('#control-[ID]').val(files.join('|'));
+
+                        $('#' + file.id + ' .cancel > a').click(function(){
+                            var file_string = file.name + ':' + file.size + ':' + file.type;
+                            var files_raw   = $('#control-[ID]').val();
+                            var files       = files_raw ? files_raw.split('|') : [];
+                            for (var i = files.length - 1; i >= 0; i--) {
+                                if (files[i].indexOf(file_string) == 0) {
+                                    files.splice(i, 1);
+                                    break;
+                                }
+                            }
+                            $('#control-[ID]').val(files.join('|'));
+                        });
+
+                        $("#" + file.id).find(".data").html(" - Готово");
+
+                    } else {
+                        if (data.message) {
+                            alert(data.message);
+                        } else {
+                            alert('Что-то пошло не так');
+                        }
+                    }
+                },
+                'onUploadError' : function(file, errorCode, errorMsg, errorString) {
+                    $('#' + file.id + ' .data').addClass('text-danger').html('- ' + errorString);
+                },
+                'onSelectError' : function(file, errorCode, errorString) {
+                    var settings = this.settings;
+                    switch (errorCode) {
+                        case SWFUpload.QUEUE_ERROR.QUEUE_LIMIT_EXCEEDED:
+                            this.queueData.errorMsg = "Количество выбраных файлов превышает лимит (" + this.queueData.filesQueued + ")";
+                            break;
+                        case SWFUpload.QUEUE_ERROR.FILE_EXCEEDS_SIZE_LIMIT:
+                            this.queueData.errorMsg = 'Файл "' + file.name + '" превышает предельный размер (' + settings.fileSizeLimit + ')';
+                            break;
+                        case SWFUpload.QUEUE_ERROR.ZERO_BYTE_FILE:
+                            this.queueData.errorMsg = 'Файл "' + file.name + '" пуст.';
+                            break;
+                        case SWFUpload.QUEUE_ERROR.INVALID_FILETYPE:
+                            this.queueData.errorMsg = 'Файл "' + file.name + '" является некорректным';
+                            break;
+                        default : this.queueData.errorMsg = errorString;
+                    }
+                    return true;
+                }
+            });
+        });
+    </script>
+</div>

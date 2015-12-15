@@ -1,0 +1,21 @@
+<div id="combine-tree-[RESOURCE]">
+    <ul>
+        <!-- BEGIN element -->
+        <li class="IS_OPEN" data-jstree='[ELEMENT_OPTIONS]'>
+            <a href="[URL]" class="[IS_ACTIVE]">[TITLE]</a>
+            [SUB_ELEMENTS]
+        </li>
+        <!-- END element -->
+        [HTML_TREE]
+    </ul>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('#combine-tree-[RESOURCE]').jstree([JSTREE_OPTIONS]);
+
+        $("#combine-tree-[RESOURCE]").bind("select_node.jstree", function(evt, data){
+            window.location.href = data.event.currentTarget.href;
+        });
+    });
+</script>

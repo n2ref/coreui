@@ -1,0 +1,147 @@
+<div id="upload-[ID]-container" class="file-upload">
+    <input [ATTRIBUTES]/>
+    <input type="hidden" id="[ID]-del" name="[NAME]-del" value="">
+
+    <div class="file-controls">
+        <button type="button" class="btn btn-default uploadH5-btn">
+            [#Select file#]
+            <input type="file" id="upload-[ID]" accept="[ACCEPT]" [MULTIPLE]>
+        </button>
+        <!-- BEGIN control_buttons -->
+        <a class="control-button btn btn-link" style="display: none"
+           href="javascript:$.uploadH5('upload-[ID]', 'upload', '*')">[#Upload all#]</a>
+        <a class="control-button btn btn-link" style="display: none"
+           href="javascript:$.uploadH5('upload-[ID]', 'remove', '*')">[#Remove all#]</a>
+        <!-- END control_buttons -->
+        <div class="clearfix"></div>
+    </div>
+
+    <div id="upload-[ID]-queue">
+        <!-- BEGIN file -->
+        <div id="file-[KEY]" class="uploadH5-file [TYPE]" data-file-id="[ID]" data-file-container="file-[KEY]">
+            <div class="preview">
+                <!-- BEGIN img -->
+                <img src="[PREVIEW_URL]" alt="[ALT]"/>
+                <!-- END img -->
+            </div>
+            <div class="data">
+                <div class="description">
+                    <!-- BEGIN text -->
+                    <span class="file-name">[NAME]</span>
+                        <!-- BEGIN size -->
+                        (<span class="file-size">[SIZE_HUMAN]</span>)
+                        <!-- END size -->
+                    <!-- END text -->
+                    <!-- BEGIN link -->
+                    <a href="[DOWNLOAD_URL]" class="file-name" download="[NAME]">[NAME]</a>
+                        <!-- BEGIN size -->
+                        <span class="file-size">([SIZE_HUMAN])</span>
+                        <!-- END size -->
+                    <!-- END link -->
+                </div>
+                <div class="controls">
+                    <span class="remove" title="[#Remove#]"></span>
+                </div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <!-- END file -->
+    </div>
+
+    <link href="[THEME_SRC]/css/uploadH5.css" rel="stylesheet" type="text/css"/>
+    <script src="[THEME_SRC]/js/uploadH5.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $('#upload-[ID]-queue .uploadH5-file .remove').click(function(){
+            var file_id           = $(this).parent().parent().parent().data('file-id');
+            var file_container_id = $(this).parent().parent().parent().data('file-container');
+            $('#' + file_container_id).fadeOut('fast', function(){
+                var control_del = document.getElementById('[ID]-del');
+                if (control_del.value !== '') {
+                    control_del.value += ',' + file_id;
+                } else {
+                    control_del.value = file_id;
+                }
+                $(this).remove();
+            })
+        });
+
+        $.uploadH5({
+            inputID: 'upload-[ID]',
+            queueID: 'upload-[ID]-queue',
+            lang: '[LANG]',
+            fieldName: 'combine_upload',
+            sizeLimit: [SIZE_LIMIT],
+            filesLimit: [FILE_LIMIT],
+            autostart: [AUTOSTART],
+            onSelect : function() {
+                if ( ! $(this).is("[multiple]")) {
+                    document.getElementById('[ID]').value = '';
+                }
+                $('#upload-[ID]-container .control-button').show();
+            },
+            onRemove : function(file, total) {
+                if (file == '*' || total == 1) {
+                    $('#upload-[ID]-queue .uploadH5-file[data-file-id]').each(function(i, container){
+                        var file_id           = $(container).data('file-id');
+                        var file_container_id = $(container).data('file-container');
+                        $('#' + file_container_id).fadeOut('fast', function(){
+                            var control_del = document.getElementById('[ID]-del');
+                            if (control_del.value !== '') {
+                                control_del.value += ',' + file_id;
+                            } else {
+                                control_del.value = file_id;
+                            }
+                            $(this).remove();
+                        })
+                    })
+                    document.getElementById('[ID]').value = '';
+                    $('#upload-[ID]-container .control-button').hide();
+                }
+            },
+            onBeforeStart : function(xhr) {
+                var token = $('#upload-[ID]')[0].form.dataset.csrfToken;
+                var resource = $('#upload-[ID]')[0].form.dataset.resource;
+
+                xhr.setRequestHeader('X-ANT-CSRF-TOKEN', token);
+                xhr.setRequestHeader('X-ANT-RESOURCE', resource);
+                xhr.setRequestHeader('X-ANT-PROCESS', 'upload');
+            },
+            onSuccess : function(response, file_number, file) {
+                try {
+                    var data = JSON.parse(response);
+                } catch (e) {
+                    return false;
+                }
+
+                if (data.status == 'success') {
+                    var control   = document.getElementById('[ID]');
+                    var files_raw = control.value;
+                    var files     = files_raw ? files_raw.split('|') : [];
+
+                    files.push(data.filename + ':' + data.tmp_name);
+                    control.value = files.join('|');
+
+                    $('#file-upload-[ID]-' + file_number + ' .remove').click(function(){
+                        var file_string = data.filename + ':' + data.tmp_name;
+                        var files_raw   = control.value;
+                        var files       = files_raw ? files_raw.split('|') : [];
+                        for (var i = files.length - 1; i >= 0; i--) {
+                            if (files[i].indexOf(file_string) == 0) {
+                                files.splice(i, 1);
+                                break;
+                            }
+                        }
+                        control.value = files.join('|');
+                    });
+
+                } else {
+                    if (data.message) {
+                        alert(data.message);
+                    } else {
+                        alert('[#Error load file#]');
+                    }
+                }
+            }
+        });
+    </script>
+</div>

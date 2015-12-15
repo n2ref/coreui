@@ -1,0 +1,33 @@
+<div class="combine-datetimepicker" id="[ID]-datetimepicker-control">
+    <div class="combine-input-group">
+        <div class="value" style="display:none"><input [ATTRIBUTES]></div>
+        <input class="combine-form-control first combine-datetimepicker-day" id="[ID]-day"
+               autocomplete="off" type="number" onkeyup="combine.form.dateKeyUp('[ID]', this)"
+               onkeypress="combine.form.dateKeyPress(event)">
+        <input class="combine-form-control middle combine-datetimepicker-month" id="[ID]-month"
+               autocomplete="off" type="number" onkeyup="combine.form.dateKeyUp('[ID]', this)"
+               onkeypress="combine.form.dateKeyPress(event)">
+        <input class="combine-form-control middle combine-datetimepicker-year" id="[ID]-year"
+               autocomplete="off" type="number" onkeyup="combine.form.dateKeyUp('[ID]', this)"
+               onkeypress="combine.form.dateKeyPress(event)">
+        <input class="combine-form-control middle combine-datetimepicker-hour" id="[ID]-hour"
+               autocomplete="off" type="number" onkeyup="combine.form.timeKeyUp('[ID]', this)"
+               onkeypress="combine.form.dateKeyPress(event)" placeholder="00">
+        <input class="combine-form-control middle combine-datetimepicker-min" id="[ID]-min"
+               autocomplete="off" type="number" onkeyup="combine.form.timeKeyUp('[ID]', this)"
+               onkeypress="combine.form.dateKeyPress(event)" placeholder="00">
+        <button type="button" class="combine-btn combine-btn-default combine-add-on combine-datetimepicker-clear middle">
+            <img src="[TPL_DIR]/img/clear.png" alt="Очистить" title="Очистить">
+        </button>
+        <button type="button" class="combine-btn combine-btn-default combine-add-on last combine-datetimepicker-trigger">
+            <img src="[TPL_DIR]/img/calendar.png" alt="..." title="...">
+        </button>
+        <div class="clearfix"></div>
+    </div>
+    <div class="datetimepicker-container" style="display:none"></div>
+</div>
+<script type="text/javascript">
+    $(document).ready(function() {
+        combine.form.createCalendar(document.getElementById('[ID]-datetimepicker-control'));
+    });
+</script>
