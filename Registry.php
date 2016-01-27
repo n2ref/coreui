@@ -26,7 +26,7 @@ class Registry {
     /**
      * @var string
      */
-    protected static $theme = 'default';
+    protected static $theme = 'bootstrap';
 
 
     private function __construct() {}
@@ -35,7 +35,7 @@ class Registry {
     /**
      * @param \PDO|\mysqli $db
      */
-    public static function setDbConnection( $db) {
+    public static function setDbConnection($db) {
         self::$db = new Utils\Db($db);
     }
 

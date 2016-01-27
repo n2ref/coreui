@@ -28,20 +28,26 @@ class Panel {
 
 
     /**
-     * @param string $title
      * @param string $resource
      * @param string $url
      */
-    public function __construct($title, $resource, $url = '') {
+    public function __construct($resource, $url = '') {
 
         $this->theme_src      = Registry::getThemeSrc();
         $this->theme_location = Registry::getThemeLocation();
 
-        $this->title    = $title;
         $this->resource = $resource;
         $this->url      = $url;
 
         if (isset($_GET[$this->resource])) $this->active_tab = $_GET[$this->resource];
+    }
+
+
+    /**
+     * @param {string} $title
+     */
+    public function setTitle($title) {
+        $this->title = $title;
     }
 
 
@@ -151,7 +157,10 @@ class Panel {
 
         $tpl->assign('[ID]',      $this->resource);
         $tpl->assign('[CONTENT]', $this->content);
-        $tpl->assign('[TITLE]',   $this->title);
+
+        if ( ! empty($this->title)) {
+            $tpl->title->assign('[TITLE]', $this->title);
+        }
 
         if ( ! empty($this->tabs)) {
             foreach ($this->tabs as $tab) {

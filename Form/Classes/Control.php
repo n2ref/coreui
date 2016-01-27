@@ -62,7 +62,7 @@ abstract class Control {
      * @throws Exception
      */
     public function setAttr($name, $value) {
-        if (is_string($name) && (is_string($value) || is_numeric($value))) {
+        if (is_string($name) && (is_scalar($value) || $value == null)) {
             $this->attributes[$name] = $value;
 
         } else {

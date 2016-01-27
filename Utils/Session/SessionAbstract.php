@@ -105,7 +105,7 @@ abstract class SessionAbstract
 
         $name = (string) $name;
 
-        // check to see if the api wcombineed to remove a var from a namespace or a namespace
+        // check to see if the api wanted to remove a var from a namespace or a namespace
         if ($name === '') {
             unset($_SESSION[$namespace]);
             unset(self::$_expiringData[$namespace]);

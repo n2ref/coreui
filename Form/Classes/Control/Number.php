@@ -56,6 +56,15 @@ class Number extends Control {
      */
     protected function makeControl() {
 
+        if ($this->is_readonly) {
+            $text = '';
+            if ( ! empty($this->attributes['value'])) {
+                $text = $this->attributes['value'];
+            }
+
+            return $text;
+        }
+
         $tpl = file_get_contents($this->theme_location . '/html/form/controls/number.html');
 
         $attributes = array();

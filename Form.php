@@ -52,7 +52,9 @@ class Form {
         $this->theme_location = Registry::getThemeLocation();
 
         $this->session = new SessionNamespace($this->resource);
-        $this->session->form = new \stdClass();
+        if ( ! isset($this->session->form)) {
+            $this->session->form = new \stdClass();
+        }
     }
 
 
@@ -186,7 +188,7 @@ class Form {
 	 * @param  string $label
 	 * @param  string $type
 	 * @param  string $name
-	 * @return Control|Control\Upload|Control\Select
+	 * @return Control|Control\Text|Control\Upload|Control\Select|Control\Wysiwyg
      * @throws Exception
 	 */
 	public function addControl($label, $type, $name = '') {

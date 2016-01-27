@@ -12,15 +12,18 @@ class ComboTab {
     const ELEMENT_ITEM  = 1;
     const ELEMENT_BREAK = 2;
 
-    protected $title    = '';
-    protected $elements = array();
+    protected $title       = '';
+    protected $is_disabled = false;
+    protected $elements    = array();
 
 
     /**
      * @param string $title
+     * @param bool   $is_disabled
      */
-    public function __construct($title) {
-        $this->title = $title;
+    public function __construct($title, $is_disabled = false) {
+        $this->title       = $title;
+        $this->is_disabled = $is_disabled;
     }
 
 
@@ -69,5 +72,14 @@ class ComboTab {
      */
     public function getTitle() {
         return $this->title;
+    }
+
+
+    /**
+     * Активен-ли таб
+     * @return bool
+     */
+    public function isDisabled() {
+        return $this->is_disabled;
     }
 }

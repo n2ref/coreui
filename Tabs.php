@@ -113,10 +113,11 @@ class Tabs {
     /**
      * Добавление комбо таба
      * @param  string   $title
+     * @param  bool     $is_disabled
      * @return ComboTab
      */
-    public function addComboTab($title) {
-        $combo_tab = new ComboTab($title);
+    public function addComboTab($title, $is_disabled = false) {
+        $combo_tab = new ComboTab($title, $is_disabled);
         $this->tabs[] = $combo_tab;
         return $combo_tab;
     }
@@ -230,35 +231,44 @@ class Tabs {
 
             foreach ($this->tabs as $key => $tab) {
                 if ($tab instanceof ComboTab) {
-                    $elements = $tab->getElements();
-                    if ( ! empty($elements)) {
-                        $combo_tab_class = '';
-                        foreach ($elements as $element) {
-                            if ($element['type'] == $tab::ELEMENT_BREAK) {
-                                $tpl->tabs->elements->combo_tab->elements->touchBlock('break');
+                    $combo_tab_class        = '';
+                    $combo_tab_class_toggle = 'dropdown-toggle';
 
-                            } else {
-                                $url = $this->url . '&' . $this->resource . '=' . $element['id'];
-                                if ($element['disabled']) {
-                                    $class = 'disabled';
-                                    $url   = 'javascript:void(0);';
-                                } elseif ($this->active_tab == $element['id']) {
-                                    $class = 'active';
-                                    $combo_tab_class = 'active';
-                                } else {
-                                    $class = '';
+                    if ( ! $tab->isDisabled()) {
+                        $elements = $tab->getElements();
+                        if ( ! empty($elements)) {
+                            foreach ($elements as $element) {
+                                if ($element['type'] == $tab::ELEMENT_BREAK) {
+                                    $tpl->tabs->elements->combo_tab->elements2->touchBlock('break');
+
+                                } elseif ($element['type'] == $tab::ELEMENT_ITEM) {
+                                    $url = $this->url . '&' . $this->resource . '=' . $element['id'];
+                                    if ($element['disabled']) {
+                                        $class = 'disabled';
+                                        $url   = 'javascript:void(0);';
+                                    } elseif ($this->active_tab == $element['id']) {
+                                        $class = 'active';
+                                        $combo_tab_class = 'active';
+                                    } else {
+                                        $class = '';
+                                    }
+
+                                    $tpl->tabs->elements->combo_tab->elements2->element->assign('[CLASS]', $class);
+                                    $tpl->tabs->elements->combo_tab->elements2->element->assign('[TITLE]', $element['title']);
+                                    $tpl->tabs->elements->combo_tab->elements2->element->assign('[URL]',   $url);
                                 }
-
-                                $tpl->tabs->elements->combo_tab->elements->element->assign('[CLASS]', $class);
-                                $tpl->tabs->elements->combo_tab->elements->element->assign('[TITLE]', $element['title']);
-                                $tpl->tabs->elements->combo_tab->elements->element->assign('[URL]',   $url);
+                                $tpl->tabs->elements->combo_tab->elements2->reassign();
                             }
-                            $tpl->tabs->elements->combo_tab->elements->reassign();
                         }
-
-                        $tpl->tabs->elements->combo_tab->assign('[TITLE]', $tab->getTitle());
-                        $tpl->tabs->elements->combo_tab->assign('[CLASS]', $combo_tab_class);
+                    } else {
+                        $combo_tab_class        = 'disabled';
+                        $combo_tab_class_toggle = '';
                     }
+
+                    $tpl->tabs->elements->combo_tab->assign('[TITLE]',        $tab->getTitle());
+                    $tpl->tabs->elements->combo_tab->assign('[CLASS]',        $combo_tab_class);
+                    $tpl->tabs->elements->combo_tab->assign('[CLASS_TOGGLE]', $combo_tab_class_toggle);
+
                 } else {
                     $url = $this->url . '&' . $this->resource . '=' . $tab['id'];
                     if ($tab['disabled']) {

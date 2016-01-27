@@ -346,7 +346,7 @@ class Db extends Table {
         }
 
         if ($this->show_delete) {
-            $delete_msg    = $this->getLocution('Are you sure you wcombine to delete this post?');
+            $delete_msg    = $this->getLocution('Are you sure you want to delete this post?');
             $no_select_msg = $this->getLocution('You must select at least one record');
             if ($this->delete_url != '') {
                 $tpl->del_button->assign(

@@ -160,40 +160,30 @@ class Db extends Form {
                                 $control instanceof Control\Email ||
                                 $control instanceof Control\Password
                             ) {
-                                if ($control->getAttr('value') === false) {
-                                    $value = isset($data[$control->getAttr('name')])
-                                        ? $data[$control->getAttr('name')]
-                                        : '';
-                                    $control->setAttr('value', $value);
+                                if (isset($data[$control->getAttr('name')])) {
+                                    $control->setAttr('value', $data[$control->getAttr('name')]);
                                 }
 
                             } elseif ($control instanceof Control\Textarea ||
                                       $control instanceof Control\Wysiwyg ||
                                       $control instanceof Control\Markdown
                             ) {
-                                if ($control->getAttr('value') === false) {
-                                    $value = isset($data[$control->getAttr('name')])
-                                        ? $data[$control->getAttr('name')]
-                                        : '';
-                                    $control->setValue($value);
+                                if (isset($data[$control->getAttr('name')])) {
+                                    $control->setValue($data[$control->getAttr('name')]);
                                 }
 
                             } elseif ($control instanceof Control\Select) {
-                                if ($control->getSelected() === null) {
-                                    $value = isset($data[$control->getAttr('name')])
-                                        ? explode(',', $data[$control->getAttr('name')])
-                                        : '';
-                                    $control->setSelected($value);
+                                if (isset($data[$control->getAttr('name')])) {
+                                    $explode_value = explode(',', $data[$control->getAttr('name')]);
+                                    $control->setSelected($explode_value);
                                 }
 
                             } elseif ($control instanceof Control\Checkbox ||
                                       $control instanceof Control\Radio
                             ) {
-                                if ($control->getChecked() === null) {
-                                    $value = isset($data[$control->getAttr('name')])
-                                        ? explode(',', $data[$control->getAttr('name')])
-                                        : '';
-                                    $control->setChecked($value);
+                                if (isset($data[$control->getAttr('name')])) {
+                                    $explode_value = explode(',', $data[$control->getAttr('name')]);
+                                    $control->setChecked($explode_value);
                                 }
                             }
                             $controls_html .= $control->render();
@@ -205,11 +195,10 @@ class Db extends Form {
                     $buttons_controls = array();
                     foreach ($position['buttons'] as $button) {
                         if ($button instanceof Button) {
-                            if ($button instanceof Button\Switched) {
-                                $value = isset($data[$button->getAttr('name')])
-                                    ? $data[$button->getAttr('name')]
-                                    : '';
-                                $button->setAttr('value', $value);
+                            if ($button instanceof Button\Switched &&
+                                isset($data[$button->getAttr('name')])
+                            ) {
+                                $button->setAttr('value', $data[$button->getAttr('name')]);
                             }
                             $buttons_controls[] = $button->render();
                         }

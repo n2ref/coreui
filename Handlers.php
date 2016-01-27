@@ -28,18 +28,24 @@ class Handlers {
 
 
     public function __construct() {
-        $this->resource = ! empty($_SERVER['HTTP_X_ANT_RESOURCE']) ? $_SERVER['HTTP_X_ANT_RESOURCE'] : '';
-        $this->process  = ! empty($_SERVER['HTTP_X_ANT_PROCESS']) ? $_SERVER['HTTP_X_ANT_PROCESS'] : '';
+        $this->resource = ! empty($_SERVER['HTTP_X_CMB_RESOURCE']) ? $_SERVER['HTTP_X_CMB_RESOURCE'] : '';
+        $this->process  = ! empty($_SERVER['HTTP_X_CMB_PROCESS']) ? $_SERVER['HTTP_X_CMB_PROCESS'] : '';
         $this->db       = Registry::getDbConnection()->getAdapter();
     }
 
 
+
     /**
-     * @return SessionNamespace
+     * @param  string     $name
+     * @return mixed|null
      */
-    public function getSessData() {
+    public function getSessData($name) {
+
         $session = new SessionNamespace($this->resource);
-        return clone $session;
+        if (isset($session->form) && isset($session->form->$name)) {
+            return $session->form->$name;
+        }
+        return null;
     }
 
 
@@ -174,9 +180,9 @@ class Handlers {
 
             if (isset($session->$component) &&
                 isset($session->$component->__csrf_token) &&
-                isset($_SERVER['HTTP_X_ANT_CSRF_TOKEN'])
+                isset($_SERVER['HTTP_X_CMB_CSRF_TOKEN'])
             ) {
-                return $session->$component->__csrf_token === $_SERVER['HTTP_X_ANT_CSRF_TOKEN'];
+                return $session->$component->__csrf_token === $_SERVER['HTTP_X_CMB_CSRF_TOKEN'];
             }
         }
 

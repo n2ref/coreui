@@ -75,7 +75,7 @@ class Table {
             'on'                                         => 'вкл',
             'Total'                                      => 'Всего',
             'No records'                                 => 'Нет записей',
-            'Are you sure you wcombine to delete this post?' => 'Вы действительно хотите удалить эту запись?',
+            'Are you sure you want to delete this post?' => 'Вы действительно хотите удалить эту запись?',
             'You must select at least one record'        => 'Нужно выбрать хотя бы одну запись'
         ),
         'en' => array(
@@ -90,7 +90,7 @@ class Table {
             'on'                                         => 'on',
             'Total'                                      => 'Total',
             'No records'                                 => 'No records',
-            'Are you sure you wcombine to delete this post?' => 'Are you sure you wcombine to delete this post?',
+            'Are you sure you want to delete this post?' => 'Are you sure you want to delete this post?',
             'You must select at least one record'        => 'You must select at least one record'
         )
     );
@@ -104,11 +104,8 @@ class Table {
         $this->resource = $resource;
         $this->lang     = Registry::getLanguage();
 
-        $theme         = Registry::getTheme();
-        $container_dir = substr(__DIR__, strlen($_SERVER['DOCUMENT_ROOT']));
-
-        $this->theme_src      = $container_dir . '/Themes/' . $theme;
-        $this->theme_location = __DIR__ . '/Themes/' . $theme;
+        $this->theme_src      = Registry::getThemeSrc();
+        $this->theme_location = Registry::getThemeLocation();
 
         $this->current_page = isset($_GET["_page_{$this->resource}"]) && $_GET["_page_{$this->resource}"] > 0
             ? (int)$_GET["_page_{$this->resource}"]
@@ -116,9 +113,15 @@ class Table {
 
 
         $this->session = new SessionNamespace($this->resource);
-        $this->session->access = new \stdClass();
-        $this->session->db     = new \stdClass();
-        $this->session->table  = new \stdClass();
+        if ( ! isset($this->session->access)) {
+            $this->session->access = new \stdClass();
+        }
+        if ( ! isset($this->session->db)) {
+            $this->session->db = new \stdClass();
+        }
+        if ( ! isset($this->session->table)) {
+            $this->session->table = new \stdClass();
+        }
 
         if (isset($this->session->table)) {
             // Количество записей
@@ -313,7 +316,7 @@ class Table {
     /**
      * Получение отфильтрованных данных.
      * Только тех, которые будут показаны в таблице
-     * @return array|Row
+     * @return array
      */
     public function fetchData() {
 
@@ -357,6 +360,7 @@ class Table {
 	protected function make() {
 
         $tpl = new Mtpl($this->theme_location . '/html/table.html');
+        $tpl->assign('[TPL_DIR]', $this->theme_src);
 
 
         if ( ! empty($this->search)) {
@@ -472,7 +476,7 @@ class Table {
         }
 
         if ($this->show_delete && $this->delete_url != '') {
-            $delete_msg    = $this->getLocution('Are you sure you wcombine to delete this post?');
+            $delete_msg    = $this->getLocution('Are you sure you want to delete this post?');
             $no_select_msg = $this->getLocution('You must select at least one record');
             $tpl->del_button->assign(
                 '[DELETE_ACTION]',
@@ -483,10 +487,9 @@ class Table {
 
         $token = sha1(uniqid());
         $this->session->table->__csrf_token = $token;
-        $tpl->assign('[TOKEN]',         $token);
-        $tpl->assign('[RESOURCE]',      $this->resource);
-        $tpl->assign('[BUTTONS]',       implode('', $this->buttons));
-        $tpl->assign('[TOTAL_RECORDS]', ($this->round_record_count ? '~' : '') . $this->record_count);
+        $tpl->assign('[TOKEN]',    $token);
+        $tpl->assign('[RESOURCE]', $this->resource);
+        $tpl->assign('[BUTTONS]',  implode('', $this->buttons));
 
 
         foreach ($this->columns as $key => $column) {
@@ -523,7 +526,7 @@ class Table {
         }
 
         $this->fetchData();
-
+        $tpl->assign('[TOTAL_RECORDS]', ($this->round_record_count ? '~' : '') . $this->record_count);
 
         if ( ! empty($this->data)) {
             $row_index  = 1;

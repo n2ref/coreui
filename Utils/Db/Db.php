@@ -20,34 +20,30 @@ class Db {
     protected $adapter;
 
     /**
-     * @param  \PDO|\mysqli $db
-     * @param  string       $adapter_name
+     * @param \PDO|\mysqli $db
      * @throws Exception
      */
-    public function __construct($db, $adapter_name = 'PDO') {
-        $this->setDbConnection($db, $adapter_name);
+    public function __construct($db) {
+        $this->setDbConnection($db);
     }
 
 
     /**
-     * @param  \PDO|\mysqli $db
-     * @param  string       $adapter_name
+     * @param \PDO|\mysqli $db
      * @throws Exception
      */
-    public function setDbConnection($db, $adapter_name = 'PDO') {
+    public function setDbConnection($db) {
 
-        switch (strtolower($adapter_name)) {
-            case 'pdo':
-                require_once 'Adapters/PDO.php';
-                $this->adapter = new Adapters\PDO($db);
-                break;
+        if ($db instanceof \PDO) {
+            require_once 'Adapters/PDO.php';
+            $this->adapter = new Adapters\PDO($db);
 
-            case 'mysqli':
-                require_once 'Adapters/Mysqli.php';
-                $this->adapter = new Adapters\Mysqli($db);
-                break;
+        } elseif ($db instanceof \mysqli) {
+            require_once 'Adapters/Mysqli.php';
+            $this->adapter = new Adapters\Mysqli($db);
 
-            default : throw new Exception("Incorrect adapter '{$adapter_name}'");
+        } else {
+            throw new Exception("Incorrect db connection");
         }
     }
 
