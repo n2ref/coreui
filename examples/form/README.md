@@ -9,4 +9,4 @@ Thought the safety of the data.
 Used disposable tokens and restrictions on data storage.
 
 
-![Form](https://github.com/shabuninil/combine/tree/master/examples/form/preview.png) 
+![Form](https://raw.githubusercontent.com/shabuninil/combine/master/examples/form/preview.png) 
