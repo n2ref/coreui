@@ -36,6 +36,9 @@
     text-decoration: none;
     background-color: #dedede;
 }
+.combine-tabs-container > ul > .active > a {
+    background-color: #fff;
+}
 .combine-tabs-container > ul > .active > a,
 .combine-tabs-container > ul > .active > a:hover,
 .combine-tabs-container > ul > .active > a:focus {border-color: transparent #ddd #ddd #ddd}

@@ -13,47 +13,56 @@ class Alert {
 
     protected static $added_script = false;
 
+
     /**
      * Возвращает сообщение об успешном выполнении
-     * @param string $str
+     * @param string $status
+     * @param string $message
      * @return string
      */
-    public static function getSuccess($str) {
+    public static function get($status, $message) {
         $scripts = self::getScripts();
-        return "{$scripts}<div class=\"cmb-alert cmb-alert-success\">{$str}</div>";
+        return "{$scripts}<div class=\"cmb-alert cmb-alert-{$status}\">{$message}</div>";
+    }
+
+
+    /**
+     * Возвращает сообщение об успешном выполнении
+     * @param string $message
+     * @return string
+     */
+    public static function getSuccess($message) {
+        return self::get('success', $message);
     }
 
 
     /**
      * Возвращает сообщение с информацией
-     * @param string $str
+     * @param string $message
      * @return string
      */
-    public static function getInfo($str) {
-        $scripts = self::getScripts();
-        return "{$scripts}<div class=\"cmb-alert cmb-alert-info\">{$str}</div>";
+    public static function getInfo($message) {
+        return self::get('info', $message);
     }
 
 
     /**
      * Возвращает сообщение с предупреждением
-     * @param string $str
+     * @param string $message
      * @return string
      */
-    public static function getWarning($str) {
-        $scripts = self::getScripts();
-        return "{$scripts}<div class=\"cmb-alert cmb-alert-warning\">{$str}</div>";
+    public static function getWarning($message) {
+        return self::get('warning', $message);
     }
 
 
     /**
      * Возвращает сообщение об ошибке или опасности
-     * @param string $str
+     * @param string $message
      * @return string
      */
-    public static function getDanger($str) {
-        $scripts = self::getScripts();
-        return "{$scripts}<div class=\"cmb-alert cmb-alert-danger\">{$str}</div>";
+    public static function getDanger($message) {
+        return self::get('danger', $message);
     }
 
 
