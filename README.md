@@ -17,9 +17,9 @@ $ composer require bluefish/combine
 
 Examples
 --------
-* [Form](https://github.com/shabuninil/combine/examples/form) 
-* [Table](https://github.com/shabuninil/combine/examples/table) 
-* [Panel](https://github.com/shabuninil/combine/examples/panel)
-* [Tabs](https://github.com/shabuninil/combine/examples/tabs)
-* [Tree](https://github.com/shabuninil/combine/examples/tree)
-* [Alert](https://github.com/shabuninil/combine/examples/alert)
+* [Form](https://github.com/shabuninil/combine/tree/master/examples/form) 
+* [Table](https://github.com/shabuninil/combine/tree/master/examples/table) 
+* [Panel](https://github.com/shabuninil/combine/tree/master/examples/panel)
+* [Tabs](https://github.com/shabuninil/combine/tree/master/examples/tabs)
+* [Tree](https://github.com/shabuninil/combine/tree/master/examples/tree)
+* [Alert](https://github.com/shabuninil/combine/tree/master/examples/alert)
