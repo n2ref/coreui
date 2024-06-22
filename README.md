@@ -1,25 +1,26 @@
-Combine Framework
-=================
-PHP framework for web applications
+CoreUI Framework
+================
 
-Introduction
-------------
-It is a small framework to assist in the creation of web applications.
-With it, you can quickly create and customize UI elements such as tables, forms, tabs, etc.
-You can now write code thinking only of his application.
+Javascript framework for web applications
 
-Installation using Composer
+
+
+Installation using npm
 ---------------------------
 ```
-$ composer require bluefish/combine
+$ npm install coreui
 ```
 
 
 Examples
 --------
-* [Form](https://github.com/shabuninil/combine/tree/master/examples/form) 
-* [Table](https://github.com/shabuninil/combine/tree/master/examples/table) 
-* [Panel](https://github.com/shabuninil/combine/tree/master/examples/panel)
-* [Tabs](https://github.com/shabuninil/combine/tree/master/examples/tabs)
-* [Tree](https://github.com/shabuninil/combine/tree/master/examples/tree)
-* [Alert](https://github.com/shabuninil/combine/tree/master/examples/alert)
+* [Panel](https://n2ref.github.io/coreui-panel)
+* [Form](https://n2ref.github.io/coreui-form) 
+* [Table](https://n2ref.github.io/coreui-table) 
+* [Layout](https://n2ref.github.io/coreui-layout)
+* [Info](https://n2ref.github.io/coreui-info)
+* [Modal](https://n2ref.github.io/coreui-modal)
+* [Notice](https://n2ref.github.io/coreui-notice)
+* [Breadcrumb](https://n2ref.github.io/coreui-breadcrumb)
+* [Alert](https://n2ref.github.io/coreui-alert)
+* [Chart](https://n2ref.github.io/coreui-chart)
